@@ -5,6 +5,7 @@ import { FaPlay, FaRegStar } from "react-icons/fa";
 import { IoMdAdd, IoMdDownload, IoMdShare } from "react-icons/io";
 import { AiOutlineLike } from "react-icons/ai";
 import { IoArrowBack, IoShareSocialOutline } from "react-icons/io5";
+import Loading from "./Loading";
 // https://image.tmdb.org/t/p/w200//
 export default function Preview() {
   const nav = useNavigate();
@@ -21,7 +22,7 @@ export default function Preview() {
       });
     }
   }, []);
-  if (!data) return <h1 color="#fff">LOADING...</h1>;
+  if (!data) return <Loading/>;
   return (
     <div className="previewPage">
       <section className="hero_preview">

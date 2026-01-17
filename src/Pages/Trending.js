@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { allPopular } from "../Functions";
 import { useLocation, useNavigate } from "react-router-dom";
-import { FaRegStar } from "react-icons/fa";
+import { FaPlay, FaRegStar } from "react-icons/fa";
 import { CiPlay1 } from "react-icons/ci";
 
 const imgSize = 300;
@@ -22,24 +22,29 @@ export default function Trending() {
           return (
             <div
               className="littleMovieCard"
-              key={i}
+              key={v.id}
               onClick={() => nav(`/preview/movie/${v.id}`)}
             >
-              <img
-                src={`https://image.tmdb.org/t/p/w${imgSize}//${v.poster_path}.jpg`}
-              />
-              <div
-                className="overImg"
-                style={{ width: imgSize, aspectRatio: "2/3" }}
-              >
-                <CiPlay1 size={70} />
+              <div className="poster-wrapper">
+                <img
+                  src={`https://image.tmdb.org/t/p/w${imgSize}/${v.poster_path}`}
+                  alt={v.title}
+                  loading="lazy"
+                />
+                <div className="overImg">
+                  <div className="play-icon-circle">
+                    <FaPlay />
+                    
+                  </div>
+                </div>
               </div>
-              <div style={{ width: "100%" }}>
+
+              <div className="movie-info">
                 <h3>{v.title}</h3>
-                <p style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                  <FaRegStar color="yellow" />
-                  {v.vote_average.toString().split("").splice(0, 3)}
-                </p>
+                <div className="rating">
+                  <FaRegStar className="star-icon" />
+                  <span>{v.vote_average.toFixed(1)}</span>
+                </div>
               </div>
             </div>
           );

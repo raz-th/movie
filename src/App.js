@@ -6,6 +6,8 @@ import Trending from "./Pages/Trending";
 import Movies from "./Pages/Movies";
 import TvShows from "./Pages/TvShows";
 
+import "./App.css"
+
 const Layout = () => {
   const loc = useLocation();
   if (loc.pathname.startsWith("/preview")) return <Outlet/>;

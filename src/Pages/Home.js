@@ -1,86 +1,131 @@
 import { useEffect, useState } from "react";
-import "../App.css";
 import { getMainPageData } from "../Functions";
-import { FaRegStar } from "react-icons/fa";
-import { CiPlay1 } from "react-icons/ci";
+import { FaRegStar, FaPlay } from "react-icons/fa"; // Swapped CiPlay1 for FaPlay for better standard look
 import { useNavigate } from "react-router-dom";
-// const imgs = ["oJ7g2CifqpStmoYQyaLQgEU32qO"];
 
-
-const imgSize = 300;
+const IMG_SIZE = 300; // Standard w300 for posters
 
 function Home() {
-  const nav = useNavigate()
-  const [imgs, setImgs] = useState([]);
-  const [popularM, setPopularM] = useState([]);
+  const nav = useNavigate();
+  const [data, setData] = useState({ imgs: [], movies: [] });
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
-    getMainPageData().then((v) => {
-      setImgs(v.imgs);
-      setPopularM(v.movies);
-    });
+    getMainPageData()
+      .then((v) => {
+        setData(v);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Failed to fetch data", err);
+        setLoading(false);
+      });
   }, []);
-  useEffect(() => {
-    console.log(popularM);
-  }, [popularM]);
+
+  // Helper to ensure images loop correctly and don't crash if undefined
+  const getSafeImage = (list, index) => {
+    if (!list || list.length === 0) return "";
+    return list[index % list.length];
+  };
+
   return (
     <div className="App">
-      {/* hero */}
+      {/* HERO SECTION */}
       <section className="hero_section">
+        {/* Background Scrolling Animation */}
         <div className="scrollMovies_hero_container">
           {Array(6)
             .fill()
-            .map((_, rowI) => {
-              return (
-                <div
-                  style={{
-                    animationDuration: `${20 + Math.random() * 50 + rowI * 2}s`,
-                    animationDirection: rowI % 2 == 0 ? "normal" : "reverse",
-                    transform: `translateY(${Math.random() * 40}%)`,
-                  }}
-                  className="hero_section_row"
-                  key={rowI}
-                >
-                  {[...Array(6)].map((_, idx) => (
-                    <img
-                      key={idx}
-                      className="movie_card_hero"
-                      src={`https://image.tmdb.org/t/p/w200//${
-                        imgs[idx * rowI] || imgs[0]
-                      }`}
-                    />
-                  ))}
-                </div>
-              );
-            })}
+            .map((_, rowI) => (
+              <div
+                style={{
+                  animationDuration: `${30 + rowI * 5}s`, // More predictable timing
+                  animationDirection: rowI % 2 === 0 ? "normal" : "reverse",
+                  transform: `translateY(${Math.random() * 20 - 10}%)`, // Smaller random offset
+                }}
+                className="hero_section_row"
+                key={rowI}
+              >
+                {/* Increased array size to make the scroll look denser */}
+                {[...Array(10)].map((_, idx) => (
+                  <img
+                    key={idx}
+                    className="movie_card_hero"
+                    src={`https://image.tmdb.org/t/p/w200/${getSafeImage(data.imgs, idx + rowI)}`}
+                    alt="Background Movie"
+                    loading="lazy"
+                  />
+                ))}
+              </div>
+            ))}
         </div>
+
+        {/* Hero Text Content */}
         <div className="divWithHeroTitle">
-          <h1><span>Stream</span> the latest hits and classic gems </h1>
-          <p>
-            Discover movies, shows, and live events in one lightning-fast,
-            beautiful experience.{" "}
-          </p>
+          <div className="hero-content">
+            <h1>
+              <span>Stream</span> the latest hits and classic gems
+            </h1>
+            <p>
+              Discover movies, shows, and live events in one lightning-fast,
+              beautiful experience.
+            </p>
+            <div className="hero-buttons">
+               <button className="btn-primary" onClick={() => nav('/trending?page=1')}>
+                 Browse Movies
+               </button>
+            </div>
+          </div>
         </div>
       </section>
-      {/* trending */}
+
+      {/* TRENDING SECTION */}
       <section className="trending_section">
-        <div style={{display: 'flex', fontSize: 25, alignItems: 'end', justifyContent: 'space-between', width: '95%'}}>
-          <h2>Trending now</h2>
-          <a href="/trending?page=1" style={{color: '#411ba1'}}>View All</a>
+        <div className="section-header">
+          <h2>Trending Now</h2>
+          <button className="view-all-btn" onClick={() => nav("/trending?page=1")}>
+            View All
+          </button>
         </div>
-        <div className="pop_movies">
-          {popularM.map((v, i) => {
-            return (
-              <div className="littleMovieCard" key={i} onClick={()=>nav(`/preview/movie/${v.id}`)}>
-                <img src={`https://image.tmdb.org/t/p/w${imgSize}//${v.poster_path}.jpg`} />
-                <div className="overImg" style={{width: imgSize, aspectRatio: "2/3"}}><CiPlay1 size={70}/></div>
-                <div style={{width: '100%'}}>
+
+        {loading ? (
+          <div className="loading-grid">
+            {[...Array(5)].map((_, i) => (
+              <div key={i} className="skeleton-card"></div>
+            ))}
+          </div>
+        ) : (
+          <div className="pop_movies">
+            {data.movies.map((v) => (
+              <div 
+                className="littleMovieCard" 
+                key={v.id} 
+                onClick={() => nav(`/preview/movie/${v.id}`)}
+              >
+                <div className="poster-wrapper">
+                  <img 
+                    src={`https://image.tmdb.org/t/p/w${IMG_SIZE}/${v.poster_path}`} 
+                    alt={v.title} 
+                    loading="lazy"
+                  />
+                  <div className="overImg">
+                    <div className="play-icon-circle">
+                      <FaPlay />
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="movie-info">
                   <h3>{v.title}</h3>
-                  <p style={{display: 'flex', alignItems: 'center', gap: 10}}><FaRegStar color="yellow"/>{v.vote_average.toString().split("").splice(0, 3)}</p>
+                  <div className="rating">
+                    <FaRegStar className="star-icon" />
+                    <span>{v.vote_average.toFixed(1)}</span>
+                  </div>
                 </div>
               </div>
-            );
-          })}
-        </div>
+            ))}
+          </div>
+        )}
       </section>
     </div>
   );

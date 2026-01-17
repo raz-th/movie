@@ -1,11 +1,18 @@
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;900&display=swap');
+
 * {
   padding: 0;
   margin: 0;
+  box-sizing: border-box;
 }
 
-.App {
-  text-align: center;
+body {
+  background-color: #0a0a0a;
+  font-family: 'Outfit', sans-serif;
   color: #fff;
+  overflow-x: hidden;
 }
 
 header {
@@ -19,13 +26,12 @@ header {
   z-index: 100;
 
   background: rgb(10, 10, 10);
-  background: linear-gradient(
-    180deg,
-    rgb(10, 10, 10) 0%,
-    rgba(10, 10, 10, 0.5) 80%,
-    rgba(10, 10, 10, 0) 100%
-  );
+  background: linear-gradient(180deg,
+      rgb(10, 10, 10) 0%,
+      rgba(10, 10, 10, 0.5) 80%,
+      rgba(10, 10, 10, 0) 100%);
 }
+
 nav {
   color: #fff;
   width: 20%;
@@ -44,137 +50,591 @@ header h1 {
   color: #411ba1;
 }
 
+.App {
+  text-align: center;
+  min-height: 100vh;
+}
+
+/* --- HERO SECTION --- */
 .hero_section {
   width: 100vw;
-  height: 50vh;
+  height: 80vh;
+  /* Increased height slightly for impact */
   background-color: #000;
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
+  /* Keep content to right */
+  align-items: center;
   overflow: hidden;
   position: relative;
 }
 
 .scrollMovies_hero_container {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 60%;
+  /* Takes up right side */
+  height: 100%;
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
-  width: 70%;
+  z-index: 1;
+  opacity: 0.6;
+  /* Dim the background cards slightly */
 }
 
 .hero_section_row {
   display: flex;
   flex-direction: column;
-  will-change: transform;
-  gap: 10px;
-  animation: move_hero_cards_anim 150s linear infinite;
+  gap: 15px;
+  animation: move_hero_cards_anim linear infinite;
 }
+
 .movie_card_hero {
-  background-color: red;
-  color: #fff;
-  /* padding: 20px;  */
+  width: 150px;
+  border-radius: 8px;
+  object-fit: cover;
+  filter: blur(2px);
+  /* Blur background cards for depth */
 }
 
 .divWithHeroTitle {
   position: absolute;
-  background: rgb(10, 10, 10);
-  background: linear-gradient(
-    90deg,
-    rgb(10, 10, 10) 0%,
-    rgba(10, 10, 10, 0.99) 40%,
-    rgba(10, 10, 10, 0.8) 100%
-  );
+  /* Improved Gradient: More opaque on left, transparent on right */
+  background: linear-gradient(90deg,
+      rgba(10, 10, 10, 1) 0%,
+      rgba(10, 10, 10, 0.8) 50%,
+      rgba(10, 10, 10, 0.4) 80%,
+      rgba(10, 10, 10, 0) 100%);
   left: 0;
+  top: 0;
   height: 100%;
   width: 100%;
-  color: #fff;
+  z-index: 2;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: start;
+  align-items: center;
+}
+
+.hero-content {
+  width: 50%;
   padding-left: 5rem;
-  gap: 20px;
+  text-align: left;
+  animation: fadeIn 1s ease-out;
 }
 
 .divWithHeroTitle h1 {
-  font-size: 5rem;
-  max-width: 30%;
-  text-align: left;
-}
-.divWithHeroTitle span {
-  color: #411ba1;
-}
-.divWithHeroTitle p {
-  max-width: 30%;
-  text-align: left;
-}
-.trending_section {
-  /* background-color: red; */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-  padding: 20px;
+  font-size: 4rem;
+  /* Responsive fallback handled usually via clamp, but fixed here for simplicity */
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 1.5rem;
+  max-width: 800px;
 }
 
-.littleMovieCard {
-  background-color: #141414;
-  border: #141414 1rem solid;
-  /* padding: 20px; */
-  border-radius: 10px;
-  text-align: left;
+.divWithHeroTitle span {
+  color: #6d28d9;
+  /* A slightly brighter purple */
+  background: linear-gradient(90deg, #6d28d9, #a855f7);
+  background-clip:unset;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.divWithHeroTitle p {
+  font-size: 1.25rem;
+  color: #d1d5db;
+  max-width: 600px;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+.hero-buttons {
+  display: flex;
+  gap: 1rem;
+}
+
+.btn-primary {
+  padding: 1rem 2.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 50px;
+  border: none;
+  background-color: #6d28d9;
+  color: white;
+  cursor: pointer;
+  transition: transform 0.2s, background-color 0.2s;
+}
+
+.btn-primary:hover {
+  background-color: #7c3aed;
+  transform: translateY(-2px);
+}
+
+/* --- TRENDING SECTION --- */
+.trending_section {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
-  text-align: left;
-  transition: 0.1s;
+  padding: 4rem 2rem;
+  background: linear-gradient(180deg, #0a0a0a 0%, #111111 100%);
+}
+
+.section-header {
+  width: 90%;
+  max-width: 1400px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+}
+
+.section-header h2 {
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+.view-all-btn {
+  background: none;
+  border: none;
+  color: #a855f7;
+  font-size: 1.1rem;
+  font-weight: 600;
   cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 5px;
+}
+
+/* RESPONSIVE GRID */
+.pop_movies {
+  display: grid;
+  /* Auto-fill makes it responsive without media queries */
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  width: 90%;
+  max-width: 1400px;
+  gap: 2rem;
+  /* Clean spacing */
+}
+
+/* --- MOVIE CARD --- */
+.littleMovieCard {
+  background-color: #1c1c1c;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.3s;
+  position: relative;
+  border: 1px solid #333;
+}
+
+.littleMovieCard:hover {
+  transform: scale(1.05) translateY(-5px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.3);
+  z-index: 10;
+}
+
+.poster-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 2/3;
+  overflow: hidden;
 }
 
 .littleMovieCard img {
-  border-radius: 5px;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .littleMovieCard .overImg {
   position: absolute;
-  background-color: rgba(0, 0, 0, 0.9);
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.6);
   display: flex;
   justify-content: center;
   align-items: center;
   opacity: 0;
-  transition: 0.1s;
-  border-radius: 5px;
+  transition: opacity 0.3s ease-in-out;
+  backdrop-filter: blur(2px);
 }
 
-.littleMovieCard:hover {
-  transform: scale(1.01);
-}
 .littleMovieCard:hover .overImg {
   opacity: 1;
 }
 
-.trending_section .pop_movies {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: repeat(1, 1fr);
-  width: 100%;
-  gap: 50px;
+.play-icon-circle {
+  width: 60px;
+  height: 60px;
+  background: #fff;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #000;
+  font-size: 1.5rem;
+  transform: scale(0.8);
+  transition: transform 0.3s;
 }
 
-.previewPage {
+.littleMovieCard:hover .play-icon-circle {
+  transform: scale(1);
+}
+
+.movie-info {
+  padding: 1rem;
+  text-align: left;
+  width: 100%;
+}
+
+.movie-info h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #d1d5db;
+  font-size: 0.95rem;
+}
+
+.star-icon {
+  color: #fbbf24;
+  /* Amber-400 */
+}
+
+/* --- LOADING SKELETON --- */
+.loading-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  width: 90%;
+  gap: 2rem;
+}
+
+.skeleton-card {
+  background-color: #1c1c1c;
+  border-radius: 12px;
+  aspect-ratio: 2/3;
+  animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.btn {
+  padding: 1rem 2.5rem;
+  font-size: 1.1rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-weight: 700;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.playBtn {
+  background-color: #fff;
+  color: #000;
+}
+
+.playBtn:hover {
+  background-color: #e5e5e5;
+  transform: scale(1.05);
+}
+
+.downloadBtn {
+  background-color: rgba(109, 109, 110, 0.7);
   color: #fff;
 }
 
-@keyframes move_hero_cards_anim {
-  0% {
-    transform: translateY(0);
-  }
-  100% {
-    transform: translateY(-50%);
-  }
+.downloadBtn:hover {
+  background-color: rgba(109, 109, 110, 0.4);
+  transform: scale(1.05);
 }
 
-/* preview page */
+.btn-circle {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  padding: 0;
+  font-size: 1.5rem;
+  background-color: rgba(109, 109, 110, 0.7);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-circle:hover {
+  background-color: rgba(255, 255, 255, 0.4);
+  border-color: #fff;
+}
+
+/* 
+   SHARED COMPONENTS (Cards & Gradients) 
+*/
+.littleMovieCard {
+  background-color: var(--card-bg);
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  border: 1px solid #333;
+}
+
+.littleMovieCard:hover {
+  transform: scale(1.05);
+  z-index: 10;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+}
+
+.littleMovieCard img {
+  width: 100%;
+  aspect-ratio: 2/3;
+  object-fit: cover;
+  display: block;
+}
+
+.littleMovieCard h3 {
+  font-size: 1rem;
+  margin: 0.5rem 0;
+  padding: 0 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.overImg {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.littleMovieCard:hover .overImg {
+  opacity: 1;
+}
+
+/* 
+   MOVIES.JS & TVSHOWS.JS STYLES 
+*/
+.moviesPage {
+  padding-bottom: 50px;
+}
+
+.moviesPage_hero {
+  position: relative;
+  height: 80vh;
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+.moviesPage_hero img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+}
+
+
+
+.fadeImg2 {
+  background: rgb(10, 10, 10);
+  background: linear-gradient(
+    90deg,
+    rgb(10, 10, 10) 0%,
+    rgba(10, 10, 10, 0.8) 30%,
+    rgba(10, 10, 10, 0) 50%,
+    rgba(10, 10, 10, 0) 100%
+  );
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  justify-content: center;
+}
+
+.cc {
+  width: 50%;
+  padding-left: 5%;
+  padding-bottom: 2rem;
+  /* Spacing from bottom */
+}
+
+.cc h1 {
+  font-size: 3.5rem;
+  line-height: 1.1;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+}
+
+
+.cat_movi {
+  display: grid;
+  /* Responsive Grid: Creates as many columns as fit, min 200px wide */
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+  padding: 0 2rem;
+  width: 100%;
+}
+
+/* Styling the 'View All' Link in Movies/TvShows */
+.moviesPage_categories a {
+  color: var(--accent-purple-light);
+  text-decoration: none;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--accent-purple);
+  border-radius: 20px;
+  transition: all 0.2s;
+}
+
+.moviesPage_categories a:hover {
+  background-color: var(--accent-purple);
+  color: white;
+}
+
+/* 
+   PREVIEW.JS STYLES 
+*/
+
+
+
+.imgFade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(0deg,
+      var(--primary-bg) 0%,
+      rgba(10, 10, 10, 0.6) 40%,
+      rgba(10, 10, 10, 0) 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 4rem 2rem;
+}
+
+.imgFade_content {
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  animation: fadeIn 0.8s ease-out;
+}
+
+.imgFade_content h1 {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.imgFade_content_des {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  margin-top: 2rem;
+  align-items: start;
+}
+
+.castCard {
+  background-color: rgba(28, 28, 28, 0.6);
+  backdrop-filter: blur(10px);
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.castCard p {
+  margin-bottom: 0.5rem;
+}
+
+.castCard2 {
+  background-color: var(--card-bg);
+  padding: 2rem;
+  border-radius: 12px;
+  margin-top: 2rem;
+  border: 1px solid #333;
+}
+
+.carcon {
+  display: flex;
+  gap: 20px;
+  padding: 15px 0;
+  border-bottom: 1px solid #333;
+  transition: background 0.2s;
+}
+
+.carcon:last-child {
+  border-bottom: none;
+}
+
+.carcon:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.carcon img {
+  width: 80px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+
+/* 
+   TRENDING.JS STYLES 
+*/
+.viewTrendingDiv {
+  padding: 4rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.moviesContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 30px;
+  width: 100%;
+  max-width: 1400px;
+  margin-bottom: 3rem;
+  margin-top: 50px;
+}
+
+/* Pagination Button Styling */
+.viewTrendingDiv button {
+  background-color: var(--accent-purple);
+  color: white;
+  border: none;
+  padding: 1rem 3rem;
+  font-size: 1.2rem;
+  border-radius: 50px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s, background-color 0.2s;
+}
+
+.viewTrendingDiv button:hover {
+  background-color: var(--accent-purple-light);
+  transform: translateY(-3px);
+}
+
+/* preview */
 
 .hero_preview {
   display: flex;
@@ -287,7 +747,7 @@ header h1 {
   position: absolute;
   background-color: #000;
   color: #fff;
-  z-index: 100;
+  z-index: 500;
   top: 20px;
   left: 20px;
   border: #333943 2px solid;
@@ -333,6 +793,7 @@ header h1 {
   z-index: 10;
   top: 0;
   aspect-ratio: 16/9;
+  min-height: max-content;
 }
 .moviesPage_hero .fadeImg2 {
   background: rgb(10, 10, 10);
@@ -369,17 +830,175 @@ header h1 {
   aspect-ratio: 16/9;
 }
 
+
 .moviesPage_categories {
-  color: #fff;
-  /* width: 100%; */
-  margin-top: -15%;
-  z-index: 50;
   position: relative;
-  padding: 20px;
+  z-index: 10; /* Lower than Hero fade (20) so content overlaps */
+  margin-top: -80px; /* Overlap the hero image */
+  padding: 100px 2rem 20px 2rem; /* Top padding accounts for overlap */
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
 }
+
 .moviesPage_categories .cat_movi {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   grid-template-rows: repeat(1, 1fr);
   gap: 30px;
+}
+
+/* 
+   MEDIA QUERIES FOR RESPONSIVENESS 
+*/
+@media (max-width: 768px) {
+  .cc {
+    width: 90%;
+    padding-left: 5%;
+  }
+
+  .cc h1 {
+    font-size: 2.5rem;
+  }
+
+  .imgFade_content h1 {
+    font-size: 2.5rem;
+  }
+
+  .imgFade_content_des {
+    grid-template-columns: 1fr;
+  }
+
+  .moviesPage_hero,
+  .hero_preview {
+    height: 50vh;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes move_hero_cards_anim {
+  0% {
+    transform: translateY(0);
+  }
+
+  100% {
+    transform: translateY(-50%);
+  }
+}
+
+@keyframes pulse {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: .5;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Tweaks */
+@media (max-width: 768px) {
+  .hero-content {
+    width: 90%;
+    padding-left: 1.5rem;
+  }
+
+  .divWithHeroTitle h1 {
+    font-size: 2.5rem;
+  }
+
+  .scrollMovies_hero_container {
+    width: 100%;
+    opacity: 0.3;
+  }
+
+  .hero_section {
+    justify-content: center;
+
+  }
+}
+
+.loader-circle-11 {
+    position: relative;
+    width: 70px;
+    height: 70px;
+    transform-style: preserve-3d;
+    perspective: 400px;
+}
+.loader-circle-11 .arc {
+    position: absolute;
+    content: "";
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border-bottom: 5px solid #411ba1;
+}
+.loader-circle-11 .arc:nth-child(1) {
+    animation: rotate1 1.15s linear infinite;
+}
+.loader-circle-11 .arc:nth-child(2) {
+    animation: rotate2 1.15s linear infinite;
+}
+.loader-circle-11 .arc:nth-child(3) {
+    animation: rotate3 1.15s linear infinite;
+}
+.loading .arc:nth-child(1) {
+    animation-delay: -0.8s;
+}
+.loader-circle-11 .arc:nth-child(2) {
+    animation-delay: -0.4s;
+}
+.loader-circle-11 .arc:nth-child(3) {
+    animation-delay: 0s;
+}
+@keyframes rotate1 {
+    from {
+        transform: rotateX(35deg) rotateY(-45deg) rotateZ(0);
+    }
+    to {
+        transform: rotateX(35deg) rotateY(-45deg) rotateZ(1turn);
+    }
+}
+@keyframes rotate2 {
+    from {
+        transform: rotateX(50deg) rotateY(10deg) rotateZ(0);
+    }
+    to {
+        transform: rotateX(50deg) rotateY(10deg) rotateZ(1turn);
+    }
+}
+@keyframes rotate3 {
+    from {
+        transform: rotateX(35deg) rotateY(55deg) rotateZ(0);
+    }
+    to {
+        transform: rotateX(35deg) rotateY(55deg) rotateZ(1turn);
+    }
 }
