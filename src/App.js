@@ -1,24 +1,42 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter, Routes, Route, Link, Outlet, useLocation } from "react-router-dom";
+
+import Home from "./Pages/Home";
+import Preview from "./Pages/Preview";
+import Trending from "./Pages/Trending";
+import Movies from "./Pages/Movies";
+import TvShows from "./Pages/TvShows";
+
+const Layout = () => {
+  const loc = useLocation();
+  if (loc.pathname.startsWith("/preview")) return <Outlet/>;
+  return (
+    <>
+      <header>
+        <Link to={"/"}><h1>StreamFLow</h1></Link>
+        <nav>
+          <Link to={"/"}>Home</Link>
+          <Link to={"/tvshows"}>TV Shows</Link>
+          <Link to={"/movies"}>Movies</Link>
+        </nav>
+      </header>
+      <Outlet/>
+    </>
+  );
+};
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route element={<Layout />}>
+          <Route path="/" index element={<Home />} />
+          <Route path="/preview/:type/:id" element={<Preview />} />
+          <Route path="/trending" element={<Trending />} />
+          <Route path="/movies" element={<Movies />} />
+          <Route path="/tvshows" element={<TvShows />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
 
